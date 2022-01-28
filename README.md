@@ -1,18 +1,18 @@
 # snupper-test
 
-Instrucciones:
+1 Instrucciones:
 Clonar el repositorio
 `git clone https://github.com/Edu-Maturana/snupper-test.git`
 
-Entrar a la carpeta
+2 Entrar a la carpeta
 `cd snupper-test`
 
-Instalar las dependencias
+3 Instalar las dependencias
 `npm install`
 
-Renombrar archivo example.env por -> .env
+4 Renombrar archivo example.env por -> .env
 
-Dentro del archivo .env, en la variable `MONGODB_URI`, añadir la url que envié por correo.
+5 Dentro del archivo .env, en la variable `MONGODB_URI`, añadir la url que envié por correo.
 
-Correr la app
+6 Correr la app
 `npm start`
