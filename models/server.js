@@ -15,6 +15,7 @@ class Server {
 
     this.database();
     this.middlewares();
+    this.routes();
   }
 
   async database() {
@@ -24,6 +25,11 @@ class Server {
   middlewares() {
     this.app.use(express.json());
     this.app.use(cors());
+  }
+
+  routes() {
+    this.app.use(this.paths.auth, require("../routes/auth"));
+    this.app.use(this.paths.users, require("../routes/users"));
   }
 
   listen() {

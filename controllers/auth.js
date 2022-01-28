@@ -1,35 +1,67 @@
 const { request, response } = require("express");
 const bcrypt = require("bcryptjs");
 
+const { generateJWT } = require("../helpers/jwt-auth");
+
 const User = require("../models/user");
 
-const signup = async (req, res) => {
+const signup = async (req = request, res = response) => {
   const { name, email, password } = req.body;
 
   // Verify if user exists
   const user = await User.findOne({ email });
-  if (!user) {
+  if (user) {
     return res.status(400).json({ msg: "User already exists" });
   }
 
   // Encrypt password
   const salt = await bcrypt.genSalt();
-  user.password = await bcrypt.hash(password, salt);
+  const hash = await bcrypt.hash(password, salt);
+
+  // Create user
+  const newUser = new User({
+    name,
+    email,
+    password: hash,
+  });
 
   // Save user
-  await user.save();
+  await newUser.save();
 
   // Response
   res.json({
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    },
+    msg: "User created successfully",
+    newUser,
+  });
+};
+
+const login = async (req = request, res = response) => {
+  const { email, password } = req.body;
+
+  // Verify if user exists
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).json({ msg: "User does not exist" });
+  }
+
+  // Verify if password is correct
+  const isMatch = bcrypt.compareSync(password, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ msg: "Invalid data" });
+  }
+
+  // Generate JWT
+  const token = await generateJWT(user);
+
+  // Response
+  res.json({
+    msg: "Logged in successfully",
+    token,
   });
 };
 
 module.exports = {
   signup,
+  login,
 };
