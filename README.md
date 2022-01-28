@@ -11,6 +11,7 @@ Instalar las dependencias
 `npm install`
 
 Renombrar archivo example.env por -> .env
+
 Dentro del archivo .env, en la variable `MONGODB_URI`, copiar la url que envié por correo.
 
 Correr la app
