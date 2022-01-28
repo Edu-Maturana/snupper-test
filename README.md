@@ -12,7 +12,7 @@ Instalar las dependencias
 
 Renombrar archivo example.env por -> .env
 
-Dentro del archivo .env, en la variable `MONGODB_URI`, copiar la url que envié por correo.
+Dentro del archivo .env, en la variable `MONGODB_URI`, añadir la url que envié por correo.
 
 Correr la app
 `npm start`
