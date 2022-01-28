@@ -1,25 +1,32 @@
 const { response, request } = require("express");
 const jwt = require("jsonwebtoken");
 
+const User = require("../models/User");
+
 const validateJWT = (req = request, res = response, next) => {
-  const authHeader = req.get("Authorization");
-  if (!authHeader) {
-    return res.status(401).json({ msg: "User not authenticated" });
+  const token = req.header("x-token");
+
+  if (!token) {
+    return res.status(401).json({
+      msg: "User not authenticated",
+    });
   }
 
-  let decodedToken;
   try {
-    decodedToken = jwt.verify(authHeader, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({ msg: "Token is not valid" });
+    const { _id } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = User.findById(_id);
+    if (!user) {
+      return res.status(404).json({
+        msg: "User not found",
+      });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({
+      msg: "Invalid token",
+    });
   }
-
-  if (!decodedToken) {
-    return res.status(401).json({ msg: "Token is not valid" });
-  }
-
-  req.user = decodedToken;
-  next();
 };
 
 module.exports = validateJWT;
