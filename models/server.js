@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
+const mongoDbConnection = require("../database/connection");
+
 class Server {
   constructor() {
     this.app = express();
@@ -10,6 +12,13 @@ class Server {
       auth: "/auth",
       users: "/users",
     };
+
+    this.database();
+    this.middlewares();
+  }
+
+  async database() {
+    await mongoDbConnection();
   }
 
   middlewares() {
